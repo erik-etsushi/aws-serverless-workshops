@@ -1,15 +1,15 @@
 # Módulo 3: Serverless Backend
 
-Neste módulo, você usará [AWS Lambda] [lambda] e [Amazon DynamoDB] [dynamodb] para criar um processo de backend para lidar com solicitações de seu aplicativo da Web. O aplicativo do navegador que você implantou no primeiro módulo permite que os usuários solicitem que um unicórnio seja enviado para um local de sua escolha. Para atender a essas solicitações, o JavaScript em execução no navegador precisará invocar um serviço em execução na nuvem.
+Neste módulo, você usará [AWS Lambda][lambda] e [Amazon DynamoDB][dynamodb] para criar um processo de backend para lidar com solicitações de seu aplicativo da Web. O aplicativo do navegador que você implantou no primeiro módulo permite que os usuários solicitem que um unicórnio seja enviado para um local de sua escolha. Para atender a essas solicitações, o JavaScript em execução no navegador precisará invocar um serviço em execução na nuvem.
 
 Você implementará uma função do Lambda que será invocada cada vez que um usuário solicitar um unicórnio. A função selecionará um unicórnio da frota, registrará a solicitação em uma tabela do DynamoDB e responderá ao aplicativo front-end com detalhes sobre o unicórnio sendo despachado.
 
 ![Serverless backend architecture](../images/serverless-backend-architecture.png)
 
-A função é chamada a partir do navegador usando [Amazon API Gateway] [api-gw]. Você implementará essa conexão no próximo módulo. Para este módulo, você apenas testará sua função isoladamente.
+A função é chamada a partir do navegador usando [Amazon API Gateway][api-gw]. Você implementará essa conexão no próximo módulo. Para este módulo, você apenas testará sua função isoladamente.
 
 
-### 1. Create an Amazon DynamoDB Table
+### 1. Crie uma tabela do Amazon DynamoDB
 
 Use o console do Amazon DynamoDB para criar uma nova tabela do DynamoDB. Chame a sua tabela `Rides` e dê-lhe uma chave de partição chamada `rideId` com o tipo String. O nome da tabela e a chave de partição são sensíveis a maiúsculas. Certifique-se de usar os IDs exatos fornecidos. Use os padrões para todas as outras configurações.
 
@@ -32,7 +32,7 @@ Cada função do Lambda tem uma função do IAM associada a ela. Essa função d
 
 
 **:white_check_mark: Instruções passo-a-passo**
-1. Vá para o [AWS IAM Console] [iam-console]
+1. Vá para o [AWS IAM Console][iam-console]
 1. Selecione **Funções** na barra de navegação esquerda e escolha **Criar função**.
 1. Selecione **Lambda** para o tipo de função no grupo **Serviço da AWS** e clique em **Avançar: Permissões**
 
@@ -47,11 +47,11 @@ Em seguida, você precisa adicionar permissões à função para que ela possa a
 **:white_check_mark: Instruções passo-a-passo*
 1. Enquanto estiver no Console do IAM na página de funções, digite `WildryDeslambda` na caixa de filtro na página Funções e escolha a função que você acabou de criar.
 1. Na guia Permissões, escolha o link **Adicionar política inline** no canto inferior direito para criar uma nova política inline.
- ![Inline policies screenshot] (../images/inline-policies.png)
+ ![Inline policies screenshot](../images/inline-policies.png)
 1. Selecione **Escolher um serviço**.
 1. Comece a digitar `DynamoDB `na caixa de pesquisa
  **Localizar um serviço** e selecione **DynamoDB ** quando ele aparecer.
- ![Select policy service] (../images/select-policy-service.png)
+ ![Select policy service](../images/select-policy-service.png)
 1. Escolha **Selecionar ações**.
 1. Comece a digitar `Putitem` na caixa de pesquisa rotulada **Ações de filtro** e marque a caixa ao lado de **Putitem** quando ela aparecer.
 1. Selecione a seção **Recursos**.
@@ -59,7 +59,7 @@ Em seguida, você precisa adicionar permissões à função para que ela possa a
 1. Cole o ARN da tabela que você criou na seção anterior no campo**Especificar ARN para tabela** e escolha **Adicionar**.
 1. Escolha **Revisar política**.
 1. Digite `DynamoDBWriteAccess` para o nome da política e escolha **Criar política**.
- ![Review Policy] (../images/review-policy.png)
+ ![Review Policy](../images/review-policy.png)
 
 ### 3. Criar uma função do Lambda para receber solicitações
 
@@ -68,7 +68,7 @@ Em seguida, você precisa adicionar permissões à função para que ela possa a
 O AWS Lambda executará seu código em resposta a eventos como uma solicitação HTTP. Nesta etapa, você criará a função principal que processará solicitações de API da aplicação Web para despachar um unicórnio. No próximo módulo, você usará o Amazon API Gateway para criar uma API RESTful que exporá um endpoint HTTP que pode ser invocado a partir dos navegadores de seus usuários. Em seguida, você conectará a função do Lambda criada nesta etapa a essa API para criar um backend totalmente funcional para sua aplicação web.
 
 **:white_check_mark: Instruções passo-a-passo**
-1. Acesse o [AWS Lambda] [lambda-console]
+1. Acesse o [AWS Lambda][lambda-console]
 1. Clique em **Criar função**.
 1. Mantenha o cartão padrão **Author from scratch** selecionado.
 1. Digite `requestUnicorn` no campo **Nome**.
@@ -76,10 +76,10 @@ O AWS Lambda executará seu código em resposta a eventos como uma solicitação
 2. Expanda *Escolha ou crie uma função de execução* em **Permissões**.
 1. Certifique-se de que `Escolha uma função existente` esteja selecionado no menu suspenso **Role**.
 1. Selecione `WildRydeslambda` no menu suspenso **Função existente**.
- ![Create Lambda function screenshot] (../images/create-lambda-function.png)
+ ![Create Lambda function screenshot](../images/create-lambda-function.png)
 1. Clique em **Criar função**.
 1. Role para baixo até a seção **Código de função** e substitua o código existente no editor de código **index.js** pelo conteúdo de [requestUnicorn.js] (requestUnicorn.js).
- ![Create Lambda function screenshot] (../images/create-lambda-function-code.png)
+ ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
 1. Clique em **"Salvar"** no canto superior direito da página.
 
 ## Validação da implementação
@@ -88,7 +88,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 
 **:white_check_mark: Instruções passo-a-passo**
 1. Na tela principal de edição da sua função, selecione **Configurar eventos de teste** no menu suspenso **Selecione um evento de teste... **.
- ![Configure test event] (../images/configure-test-event.png)
+ ![Configure test event](../images/configure-test-event.png)
 1. Manter a opção **Criar novo evento de teste** selecionada.
 1. Digite `TestRequestEvent` no campo **Nome do evento**
 1. Copie e cole o seguinte evento de teste no editor:
@@ -130,7 +130,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 
 ### :star: Revisão
 
-:key: [AWS Lambda] [lambda] é uma função sem servidor como um produto de serviço que elimina a carga de gerenciamento de servidores para executar seus aplicativos. Você configura um gatilho e define a função que a função pode usar e, em seguida, pode interagir com quase tudo o que você quiser, desde bancos de dados, armazenamentos de dados, para outros serviços, ou publicamente na Internet ou em sua própria Amazon Virtual Private Cloud (VPC). O [Amazon DynamoDB] [dynamodb] é um banco de dados sem servidor não relacional que pode ser dimensionado automaticamente para lidar com grandes quantidades de tráfego e dados sem que você precise gerenciar nenhum servidor.
+:key: [AWS Lambda][lambda] é uma função sem servidor como um produto de serviço que elimina a carga de gerenciamento de servidores para executar seus aplicativos. Você configura um gatilho e define a função que a função pode usar e, em seguida, pode interagir com quase tudo o que você quiser, desde bancos de dados, armazenamentos de dados, para outros serviços, ou publicamente na Internet ou em sua própria Amazon Virtual Private Cloud (VPC). O [Amazon DynamoDB][dynamodb] é um banco de dados sem servidor não relacional que pode ser dimensionado automaticamente para lidar com grandes quantidades de tráfego e dados sem que você precise gerenciar nenhum servidor.
 
 :wrench: Neste módulo, você criou uma tabela do DynamoDB e, em seguida, uma função do Lambda para gravar dados nela. Esta função será colocada atrás de um Amazon API Gateway no próximo módulo que, por sua vez, será conectado ao seu aplicativo web para capturar os detalhes do passeio de seus usuários.
 
