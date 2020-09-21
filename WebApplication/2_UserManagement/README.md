@@ -6,9 +6,9 @@ Neste módulo, você criará um grupo de usuários do [Amazon Cognito] [cognito]
 
 Quando os usuários visitam seu site, eles primeiro registrarão uma nova conta de usuário. Para fins deste workshop, apenas solicitaremos que eles forneçam um endereço de e-mail e senha para se cadastrar. No entanto, você pode configurar o Amazon Cognito para exigir atributos adicionais em seus próprios aplicativos.
 
-Depois que os usuários enviarem seu registro, o Amazon Cognito enviará um e-mail de confirmação com um código de verificação para o endereço fornecido. Para confirmar sua conta, os usuários retornarão ao seu site e inserirão seu endereço de e-mail e o código de verificação que receberam. Você também pode confirmar contas de usuário usando o console do Amazon Cognito se quiser usar endereços de e-mail falsos para testes.
+Depois que os usuários enviarem seu registro, o Amazon Cognito enviará um e-mail de confirmação com um código de verificação para o endereço fornecido. Para confirmar sua conta, os usuários retornarão ao seu site e inserirão seu endereço de e-mail e o código de verificação que receberam. 
 
-Depois que os usuários tiverem uma conta confirmada (usando o processo de verificação de e-mail ou uma confirmação manual através do console), eles poderão entrar. Quando os usuários fazem login, eles inserem seu nome de usuário (ou e-mail) e senha. Uma função JavaScript então se comunica com o Amazon Cognito, autentica usando o protocolo SRP (Secure Remote Password Protocol) e recebe de volta um conjunto de JSON Web Tokens (JWT). Os JWTs contêm reivindicações sobre a identidade do usuário e serão usados no próximo módulo para autenticar contra a API RESTful que você cria com o Amazon API Gateway.
+Depois que os usuários tiverem uma conta confirmada (usando o processo de verificação de e-mail ), eles poderão entrar. Quando os usuários fazem login, eles inserem seu nome de usuário (ou e-mail) e senha. Uma função JavaScript então se comunica com o Amazon Cognito, autentica usando o protocolo SRP (Secure Remote Password Protocol) e recebe de volta um conjunto de JSON Web Tokens (JWT). Os JWTs contêm reivindicações sobre a identidade do usuário e serão usados no próximo módulo para autenticar contra a API RESTful que você cria com o Amazon API Gateway.
 
 ![Authentication architecture](../images/authentication-architecture.png)
 
