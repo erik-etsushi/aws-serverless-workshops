@@ -1,33 +1,30 @@
 ## Serverless Web Application Workshop
 
-In this workshop you'll deploy a simple web application that enables users to request unicorn rides from the [Wild Rydes][wildrydes] fleet. The application will present users with an HTML based user interface for indicating the location where they would like to be picked up and will interface on the backend with a RESTful web service to submit the request and dispatch a nearby unicorn. The application will also provide facilities for users to register with the service and log in before requesting rides.
+Neste workshop, você implantará um aplicativo web simples que permite que os usuários solicitem passeios de [Wild Rydes][wildrydes]. O aplicativo apresentará aos usuários uma interface de usuário baseada em HTML para indicar o local onde eles gostariam de ser capturados e fará interface no backend com um serviço Web RESTful para enviar a solicitação e despachar um unicórnio próximo. O aplicativo também fornecerá facilidades para que os usuários se registrem no serviço e façam login antes de solicitar passeios.
 
-The application architecture uses [AWS Lambda][lambda], [Amazon API Gateway][api-gw], [Amazon S3][s3], [Amazon DynamoDB][dynamodb], [Amazon Cognito][cognito], and [AWS Amplify Console][amplify-console]. Amplify Console hosts static web resources including HTML, CSS, JavaScript, and image files which are loaded in the user's browser via S3. JavaScript executed in the browser sends and receives data from a public backend API built using Lambda and API Gateway. Amazon Cognito provides user management and authentication functions to secure the backend API. Finally, DynamoDB provides a  persistence layer where data can be stored by the API's Lambda function.
+A arquitetura do aplicativo usa [AWS Lambda] , [Amazon API Gateway] , [Amazon S3] , [Amazon DynamoDB] , [Amazon Cognito]  e [Console do AWS Amplify]. O Amplify Console hospeda recursos estáticos da Web, incluindo HTML, CSS, JavaScript e arquivos de imagem que são carregados no navegador do usuário via S3. O JavaScript executado no navegador envia e recebe dados de uma API de back-end pública criada usando o Lambda e o API Gateway. O Amazon Cognito fornece funções de gerenciamento e autenticação de usuários para proteger a API de back-end. Finalmente, o DynamoDB fornece uma camada de persistência na qual os dados podem ser armazenados pela função do Lambda da API.
 
-See the diagram below for a depiction of the complete architecture.
 
 ![Wild Rydes Web Application Architecture](images/wildrydes-complete-architecture.png)
 
 ### Modules
 
-This workshop is divided into four modules. Each module describes a scenario of
-what we're going to build and step-by-step directions to help you implement the
-architecture and verify your work.
+Este workshop é dividido em quatro módulos. Cada módulo descreve um cenário de
+o que vamos construir e orientações passo a passo para ajudá-lo a implementar o
+arquitetura e verificar o seu trabalho.
 
-| Module | Description |
+| Modulo | Descricao |
 | ---------------- | -------------------------------------------------------- |
-| [Static Web hosting]| Deploy the static website using AWS Amplify Console by first creating a git repository (in either CodeCommit or GitHub) and then pushing the site code. |
-| [User Management] | Configure user management for the website using Amazon Cognito. |
-| [Serverless Backend]| Create an AWS Lambda function that will persist data to an Amazon DynamoDB table. |
-| [RESTful APIs] | Expose the Lambda function via an Amazon API Gateway as a RESTful API that the static site can call. |
+| [Static Web hosting]| Implante o site estático usando o AWS Amplify Console criando primeiro um repositório git no CodeCommit e, em seguida, enviando o código do site. |
+| [User Management] | Configurar o gerenciamento de usuários para o site usando o Amazon Cognito. |
+| [Serverless Backend]| Crie uma função do AWS Lambda que persistirá dados em uma tabela do Amazon DynamoDB. |
+| [RESTful APIs] | Exponha a função do Lambda por meio de um Amazon API Gateway como uma API RESTful que o site estático pode chamar. |
 
-:warning: These modules are intended to be executed linearly.
 
-### Next
 
-:white_check_mark: Review and follow the directions in the [setup guide][setup],
-wherein you'll configure your AWS Cloud9 IDE and setup pre-requisites like an
-AWS Account.
+### Próximo passo
+
+:white_check_mark: Inicie com o [setup guide][setup] do ambiente.
 
 [wildrydes]: http://wildrydes.com/
 [unicorns]: http://www.wildrydes.com/unicorns.html
