@@ -1,60 +1,43 @@
-# Module 1: Static Web Hosting with AWS Amplify Console
+# Module 1: Static Web Hosting com AWS Amplify Console
 
-In this module you'll configure AWS Amplify Console to host the static resources for your web application. In subsequent modules you'll add dynamic functionality to these pages using JavaScript to call remote RESTful APIs built with AWS Lambda and Amazon API Gateway.
+Neste módulo, você configurará o AWS Amplify Console para hospedar os recursos estáticos para seu aplicativo web. Nos módulos subsequentes, você adicionará funcionalidade dinâmica a essas páginas usando JavaScript para chamar APIs RESTful remotas criadas com o AWS Lambda e o Amazon API Gateway.
 
-## Architecture Overview
+## Overview da arquitetura
 
-The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be managed by AWS Amplify Console and served via Amazon CloudFront. Your end users will then access your site using the public website URL exposed by AWS Amplify Console. You don't need to run any web servers or use other services in order to make your site available.
+A arquitetura para este módulo é muito simples. Todo o conteúdo estático da web, incluindo HTML, CSS, JavaScript, imagens e outros arquivos, será gerenciado pelo AWS Amplify Console e servido via Amazon CloudFront. Seus usuários finais acessarão seu site usando o URL do site público exposto pelo AWS Amplify Console. Você não precisa executar nenhum servidor web ou usar outros serviços para disponibilizar seu site.
 
 ![Static website architecture](../images/static-website-architecture.png)
 
-## Implementation Instructions
+## Instruções passo a passo
 
-:heavy_exclamation_mark: Ensure you've completed the [setup guide][setup] before beginning
-the workshop.
 
-Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+### Seleção de Região
 
-### Region Selection
-
-This workshop step can be deployed in any AWS region that supports the following services:
-
-- AWS Amplify Console
-- AWS CodeCommit
-
-You can refer to the [AWS region table][region-services] in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are:
-* North America: N. Virginia, Ohio, Oregon
-* Europe: Ireland, London, Frankfurt
-* Asia Pacific: Tokyo, Seoul, Singapore, Sydney, Mumbai
-
-Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
+Tenha certeza de ter selecionado a região "N. Virginia".
 
 ![Region selection screenshot](../images/region-selection.png)
 
-### Create the git repository using CodeCommit
+### Criar o repositório git usando CodeCommit
 
-* [AWS CodeCommit][commit] - CodeCommit access is included in the [AWS Free Tier][codecommit-free].
+#### Usando o AWS CodeCommit
+**:white_check_mark: Explicação passo a passo**
 
-
-#### Using AWS CodeCommit
-**:white_check_mark: Step-by-step directions**
-
-The AWS Cloud9 development environment comes with AWS managed temporary credentials that are associated with your IAM user. You use these credentials with the AWS CLI credential helper. Enable the credential helper by running the following two commands in the terminal of your Cloud9 environment.
+O ambiente de desenvolvimento do AWS Cloud9 vem com credenciais temporárias gerenciadas da AWS associadas ao usuário do IAM. Use essas credenciais com o auxiliar de credenciais da CLI da AWS. Ative o auxiliar de credenciais executando os dois comandos a seguir no terminal do ambiente do Cloud9.
 
 ```bash
 git config --global credential.helper '!aws codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
 ```
 
-Next you need to create the repository and clone it to your Cloud9 environment:
-1. Open the [AWS CodeCommit console][codecommit-console]
-1. Select **Create Repository**
-1. Set the *Repository name** to "wildrydes-site"
-1. Select **Create**
-1. From the *Clone URL* drop down, select *Clone HTTPS*
+Em seguida, você precisa criar o repositório e cloná-lo para o seu ambiente Cloud9:
+1. Abra o [AWS CodeCommit console][codecommit-console]
+1. Selecione **Create Repository**
+1. Nomeie o *Repository name** como "wildrydes-site"
+1. Selecione **Create**
+1. Na caixa de seleção *Clone URL* , selecione *Clone HTTPS*
 
-Now from your Cloud9 development environment:
-1. From a terminal window run `git clone` and the HTTPS URL of the respository:
+Agora, a partir do seu ambiente de desenvolvimento Cloud9:
+1. A partir de uma janela de terminal, execute `git clone` e a URL HTTPS do respositório:
     ```
     ec2-user:~/environment $ git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
     Cloning into 'wildrydes-site'...
@@ -63,20 +46,20 @@ Now from your Cloud9 development environment:
     ```
 
 
-#### Populate the git repository
-Once you've used AWS CodeCommit to create your git repository and clone it locally, you'll need to copy the web site content from an existing publicly accessible S3 bucket associated with this workshop and add the content to your repository.
+#### Popule o repositório git
+Depois de usar o AWS CodeCommit para criar seu repositório git e cloná-lo localmente, você precisará copiar o conteúdo do site de um bucket S3 acessível ao público existente associado a este workshop e adicionar o conteúdo ao seu repositório.
 
-**:white_check_mark: Step-by-step directions**
-From your Cloud9 development environment(or local environment)
-1. Change directory into your repository:
+**:white_check_mark: Instruções passo a passo**
+Do seu ambiente de desenvolvimento Cloud9 
+1. Alterar diretório em seu repositório:
     ```
     cd wildrydes-site/
     ```
-1. Copy the files from S3:
+1. Copie os arquivos do S3:
     ```
     aws s3 cp s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website ./ --recursive
     ```
-1. Commit the files to your git service (you might need to enter an email and user name for the commit):
+1. Commit os arquivos no seu serviço git (talvez seja necessário inserir um e-mail e um nome de usuário para a confirmação):
     ```
     $ git add .
     $ git config --global user.email "<EMAIL ADDRESS>"
@@ -94,47 +77,46 @@ From your Cloud9 development environment(or local environment)
      * [new branch]      master -> master
     ```
 
-### Deploy the site with the AWS Amplify Console
-Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website you've just commited to git. The Amplify Console takes care of the work of setting up a place to store your static web application code and provides a number of helpful capabilities to simplify both the lifecycle of that application as well as enable best practices.
+### Deploy do site com o AWS Amplify Console
+Em seguida, você usará o [Console do AWS Amplify] para implantar o site que acabou de se cadastrar no git. O Console Amplify cuida do trabalho de configurar um local para armazenar seu código de aplicativo Web estático e fornece uma série de recursos úteis para simplificar o ciclo de vida desse aplicativo, bem como habilitar as práticas recomendadas.
 
-**:white_check_mark: Step-by-step directions**
-1. Launch the [Amplify Console console page][amplify-console-console]
-1. Click **Get Started** under Deploy with Amplify Console
-1. Select the *Repository service provider* used today and select **Next**
-    1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
-1. From the dropdown select the *Repository* and *Branch* created today
+**:white_check_mark: Instruções passo a passo**
+1. Abra o Amplify Console
+1. Clique em **Get Started** abaixo de Deploy
+1. Selecione o *Repository service provider* usado e clique em **Next**
+1. Da lista, selecione o *Repository* e o *Branch* criados hoje
     
     ![Amplify Repository configuration](../images/amplify-console-repository-setup.png)
-1. On the "Configure build settings" page leave all the defaults and select **Next**
-1. On the "Review" page select **Save and deploy**
+1. Em "Configure build settings" deixe tudo como padrão e clique **Next**
+1. Na página de Review, clique em **Save and deploy**
     
-    The process takes a couple of minutes for Amplify Console to create the neccesary resources and to deploy your code.
+    O processo leva alguns minutos para o Amplify Console criar os recursos necessários e implantar seu código.
     
     ![Amplify Deployment](../images/amplify-deploy-status.png)
 
-Once completed, click on the site image to launch your Wild Rydes site.
+Uma vez concluído, clique na imagem do site para iniciar seu site Wild Rydes.
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
 
-If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample renderings on various platforms:
+Se você clicar no link para *Master*, você verá várias informações sobre a implantação do seu site, incluindo exemplos de renderizações em várias plataformas:
 
 ![Amplify Client Renderings](../images/amplify-renderings.png)
 
-### Modify the website
-The AWS Amplify Console will rebuild and redeploy the app when it detects changes to the connected repository. Make a change to the main page to test out this process.
+### Modifique o website
+O AWS Amplify Console reconstruirá e reimplantará o aplicativo quando detectar alterações no repositório conectado. Faça uma alteração na página principal para testar este processo.
 
-**:white_check_mark: Step-by-step directions**
-1. From your Cloud9 environment open the ```index.html``` file in the root directory of the repository.
-1. Modify the title line:
+**:white_check_mark: Instruções passo a passo**
+1. No ambiente do Cloud9, abra o arquivo ```index.html``` no diretório raiz do repositório.
+1. Modifique a linha de título:
     ```
       <title>Wild Rydes</title>
     ```
-    So that it says:
+    Para:
     ```
-      <title>Wild Rydes - Rydes of the Future!</title>
+      <title>Workshop Serverless Alelo!</title>
     ```
-    Save the file
-1. Commit again to your git repository the changes:
+    Salve o arquivo
+1. Commit o código novamente no seu repositório:
     ```
     $ git add index.html 
     $ git commit -m "updated title"
@@ -150,22 +132,22 @@ The AWS Amplify Console will rebuild and redeploy the app when it detects change
     To https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
        2e9f540..dfec2e5  master -> master
    ```
-    Amplify Console will begin to build the site again soon after it notices the update to the repository. It will happen pretty quickly! Head back to the [Amplify Console console page][amplify-console-console] to watch the process. 
+    O Amplify Console começará o build do site novamente logo após ele perceber a atualização para o repositório. Vai acontecer muito rapidamente! Volte para a [página de console do Amplify Console]  para assistir ao processo. 
 
-1. Once completed, re-open the Wild Rydes site and notice the title change.
+1. Uma vez concluído, reabra o site Wild Rydes e observe a mudança de título.
     
     ![title updated](../images/title-update.png)
 
-### :star: Recap
+### :star: Revisão
 
-:key: AWS Amplify Console makes it really easy to deploy static websites following a continuous integration and delivery model. It has capabilities for "building" more complicated javascript framework based applications and can show you a preview of your application as it would rendor on popular mobile platforms.
+:key: O AWS Amplify Console facilita a implantação de sites estáticos seguindo um modelo contínuo de integração e entrega. Ele tem recursos para “build” de aplicativos baseados em framework javascript mais complicados e pode mostrar-lhe uma visualização de seu aplicativo como seria renderizado em plataformas móveis populares.
 
-:wrench: In this module, you've created static website which will be the base for our Wild Rydes business.
+:wrench: Neste módulo, você criou um site estático que será a base para o nosso negócio Wild Rydes.
 
-### Next
+### Próximo
 
-:white_check_mark: Proceed to the next module, [User Management][user-management], 
-wherein you'll configure Amazon Cognito User Pools to manage the users for our application.
+:white_check_mark: Siga para o próximo módulo, [User Management][user-management], 
+onde você configurará os grupos de usuários do Amazon Cognito para gerenciar os usuários do nosso aplicativo.
 
 [setup]: ../0_Setup/
 [commit]: https://aws.amazon.com/codecommit
