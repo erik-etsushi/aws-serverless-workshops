@@ -1,87 +1,80 @@
-# Module 2: User Authentication and Registration with Amazon Cognito User Pools
+# Módulo 2: Autenticação e registro de usuários com grupos de usuários do Amazon Cognito
 
-In this module you'll create an [Amazon Cognito][cognito] user pool to manage your users' accounts. You'll deploy pages that enable customers to register as a new user, verify their email address, and sign into the site.
+Neste módulo, você criará um grupo de usuários do [Amazon Cognito] [cognito] para gerenciar as contas de seus usuários. Você implantará páginas que permitem que os clientes se registrem como um novo usuário, verifiquem seus endereços de e-mail e façam login no site.
 
-## Architecture Overview
+## Overview da arquitetura
 
-When users visit your website they will first register a new user account. For the purposes of this workshop we'll only require them to provide an email address and password to register. However, you can configure Amazon Cognito to require additional attributes in your own applications.
+Quando os usuários visitam seu site, eles primeiro registrarão uma nova conta de usuário. Para fins deste workshop, apenas solicitaremos que eles forneçam um endereço de e-mail e senha para se cadastrar. No entanto, você pode configurar o Amazon Cognito para exigir atributos adicionais em seus próprios aplicativos.
 
-After users submit their registration, Amazon Cognito will send a confirmation email with a verification code to the address they provided. To confirm their account, users will return to your site and enter their email address and the verification code they received. You can also confirm user accounts using the Amazon Cognito console if you want to use fake email addresses for testing.
+Depois que os usuários enviarem seu registro, o Amazon Cognito enviará um e-mail de confirmação com um código de verificação para o endereço fornecido. Para confirmar sua conta, os usuários retornarão ao seu site e inserirão seu endereço de e-mail e o código de verificação que receberam. Você também pode confirmar contas de usuário usando o console do Amazon Cognito se quiser usar endereços de e-mail falsos para testes.
 
-After users have a confirmed account (either using the email verification process or a manual confirmation through the console), they will be able to sign in. When users sign in, they enter their username (or email) and password. A JavaScript function then communicates with Amazon Cognito, authenticates using the Secure Remote Password protocol (SRP), and receives back a set of JSON Web Tokens (JWT). The JWTs contain claims about the identity of the user and will be used in the next module to authenticate against the RESTful API you build with Amazon API Gateway.
+Depois que os usuários tiverem uma conta confirmada (usando o processo de verificação de e-mail ou uma confirmação manual através do console), eles poderão entrar. Quando os usuários fazem login, eles inserem seu nome de usuário (ou e-mail) e senha. Uma função JavaScript então se comunica com o Amazon Cognito, autentica usando o protocolo SRP (Secure Remote Password Protocol) e recebe de volta um conjunto de JSON Web Tokens (JWT). Os JWTs contêm reivindicações sobre a identidade do usuário e serão usados no próximo módulo para autenticar contra a API RESTful que você cria com o Amazon API Gateway.
 
 ![Authentication architecture](../images/authentication-architecture.png)
 
-## Implementation Instructions
+## Implementação
 
-:heavy_exclamation_mark: Ensure you've completed the [Static Web hosting][static-web-hosting] step before beginning
-the workshop.
+### 1. Crie um Amazon Cognito User Pool
 
-Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+#### Visão geral
 
-### 1. Create an Amazon Cognito User Pool
+O Amazon Cognito fornece dois mecanismos diferentes para autenticar usuários. Você pode usar os grupos de usuários do Cognito para adicionar a funcionalidade de inscrição e login ao seu aplicativo ou usar os Pools de identidades do Cognito para autenticar usuários por meio de provedores de identidade social, como Facebook, Twitter ou Amazon, com soluções de identidade SAML ou usando seu próprio sistema de identidade. Para este módulo, você usará um grupo de usuários como backend para as páginas de registro e login fornecidas.
 
-#### Background
+Use o console do Amazon Cognito para criar um novo grupo de usuários usando as configurações padrão. Depois que seu pool for criado, observe o ID do pool. Você usará esse valor em uma seção posterior.
 
-Amazon Cognito provides two different mechanisms for authenticating users. You can use Cognito User Pools to add sign-up and sign-in functionality to your application or use Cognito Identity Pools to authenticate users through social identity providers such as Facebook, Twitter, or Amazon, with SAML identity solutions, or by using your own identity system. For this module you'll use a user pool as the backend for the provided registration and sign-in pages.
+**:white_check_mark: Instruções passo a passo**
 
-Use the Amazon Cognito console to create a new user pool using the default settings. Once your pool is created, note the Pool Id. You'll use this value in a later section.
-
-**:white_check_mark: Step-by-step directions**
-
-1. Go to the [Amazon Cognito Console][cognito-console]
-1. Choose **Manage your User Pools**.
-1. Choose **Create a User Pool**
-1. Provide a name for your user pool such as `WildRydes`, then select **Review Defaults**
+1. Vá até [Amazon Cognito Console][cognito-console]
+1. Escolha **Manage your User Pools**.
+1. Escolha **Create a User Pool**
+1. Dê um nome para o seu user pool como `WildRydes`, e selecione **Review Defaults**
     ![Create a user pool screenshot](../images/create-a-user-pool.png)
-1. On the review page, click **Create pool**.
-1. Note the **Pool Id** on the Pool details page of your newly created user pool.
+1. Na página de review, clique em **Create pool**.
+1. Anote o **Pool Id** que foi gerado.
 
-### 2. Add an App Client to Your User Pool
+### 2. Adicione um App Client no seu User Pool
 
-From the Amazon Cognito console select your user pool and then select the **App clients** section. Add a new app and make sure the Generate client secret option is deselected. Client secrets aren't supported with the JavaScript SDK. If you do create an app with a generated secret, delete it and create a new one with the correct configuration.
+No console do Amazon Cognito, selecione seu grupo de usuários e, em seguida, selecione a seção **App Clients**. Adicione um novo aplicativo e verifique se a opção Gerar segredo do cliente está desmarcada. Segredos de cliente não são suportados com o SDK JavaScript. Se você criar um aplicativo com um segredo gerado, exclua-o e crie um novo com a configuração correta.
 
-**:white_check_mark: Step-by-step directions**
-1. From the Pool Details page for your user pool, select **App clients** from the **General settings** section in the left navigation bar.
-1. Choose **Add an app client**.
-1. Give the app client a name such as `WildRydesWebApp`.
-1. **Uncheck** the Generate client secret option. Client secrets aren't supported for use with browser-based applications.
-1. Choose **Create app client**.
+**:white_check_mark: Instruções passo a passo**
+1. Selecione **App clients** dentro de **General settings**.
+1. Escolha **Add an app client**.
+1. Dê um nome como `WildRydesWebApp`.
+1. **Uncheck** a opção Gerar segredo do cliente. Segredos de cliente não são suportados para uso com aplicativos baseados em navegador.
+1. Escolha **Create app client**.
    <kbd>![Create app client screenshot](../images/add-app.png)</kbd>
-1. Note the **App client id** for the newly created application.
+1. Anote o **App client id** criado.
 
-### 3. Update the config.js File in Your Website
+### 3. Atualize o arquivo config.js do seu Website
 
-The [/js/config.js][configjs] file contains settings for the user pool ID, app client ID and Region. Update this file with the settings from the user pool and app you created in the previous steps and commit the file back to your git repository.
+O arquivo [/js/config.js][configjs] contém configurações para o ID do grupo de usuários, ID do cliente do aplicativo e Região. Atualize este arquivo com as configurações do grupo de usuários e aplicativo que você criou nas etapas anteriores e confirme o arquivo de volta para seu repositório git.
 
-**:white_check_mark: Step-by-step directions**
-1. On your Cloud9 development environment open `js/config.js`
-1. Update the `cognito` section with the correct values for the user pool and app you just created.
-    You can find the value for `userPoolId` on the Pool details page of the Amazon Cognito console after you select the user pool that you created.
+**:white_check_mark: Instruções passo a passo**
+1. Em seu ambiente de desenvolvimento Cloud9 abra `js/config.js`
+1. Atualize a seção `cognito` com os valores corretos para o grupo de usuários e aplicativo que você acabou de criar.
+ Você pode encontrar o valor para `userPoolid` na página de detalhes do pool do console do Amazon Cognito depois de selecionar o grupo de usuários criado.
 
     ![Pool ID](../images/pool-id.png)
 
-    You can find the value for `userPoolClientId` by selecting **App clients** from the left navigation bar. Use the value from the **App client id** field for the app you created in the previous section.
 
     ![Pool ID](../images/client-id.png)
 
-    The value for `region` should be the AWS Region code where you created your user pool. E.g. `us-east-1` for the N. Virginia Region, or `us-west-2` for the Oregon Region. If you're not sure which code to use, you can look at the Pool ARN value on the Pool details page. The Region code is the part of the ARN immediately after `arn:aws:cognito-idp:`.
 
-    The updated config.js file should look like this. Note that the actual values for your file will be different:
+    O arquivo config.js atualizado deve ser assim. Note que os valores reais para o seu arquivo serão diferentes:
     ```JavaScript
     window._config = {
         cognito: {
-            userPoolId: 'us-west-2_uXboG5pAb', // e.g. us-east-2_uXboG5pAb
+            userPoolId: 'us-east-1_uXboG5pAb', // e.g. us-east-1_uXboG5pAb
             userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-            region: 'us-west-2' // e.g. us-east-2
+            region: 'us-east-1' // e.g. us-east-1
         },
         api: {
-            invokeUrl: '' // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,
+            invokeUrl: '' // e.g. https://rc7nyt4tql.execute-api.us-east-1.amazonaws.com/prod,
         }
     };
     ```
-1. Save the modified file making sure the filename is still `config.js`.
-1. Commit the changes to your git repository:
+1. Salve o arquivo modificado certificando-se de que o nome do arquivo ainda está `config.js`.
+1. Commit as mudanças no seu repositório git:
     ```
     $ git add js/config.js 
     $ git commit -m "configure cognito"
@@ -95,48 +88,33 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
        7668ed4..683e884  master -> master
     ```
 
-    Amplify Console should pick up the changes and begin building and deploying your web application.
+    O Amplify Console deve pegar as alterações e começar a fazer build e implantar seu aplicativo Web.
 
-**Note:** Instead of having you write the browser-side code for managing the registration, verification, and sign in flows, we provide a working implementation in the assets you deployed in the first module. The [cognito-auth.js](../1_StaticWebHosting/website/js/cognito-auth.js) file contains the code that handles UI events and invokes the appropriate Amazon Cognito Identity SDK methods. For more information about the SDK, see the [project page on GitHub](https://github.com/aws/amazon-cognito-identity-js).
+## Validação da implementação
 
-## Implementation Validation
+**:white_check_mark: Instruções passo a passo**
+1. Visite `register.html` no domínio do seu site, ou escolha o**Giddy Up!** na página inicial do seu site.
 
-**:white_check_mark: Step-by-step directions**
-1. Visit `register.html` under your website domain, or choose the **Giddy Up!** button on the homepage of your site.
+1. Preencha o formulário de inscrição e escolha **Let's Ryde**. Você pode usar seu próprio e-mail. Certifique-se de escolher uma senha que contenha pelo menos uma letra maiúscula, um número e um caractere especial. Não se esqueça da senha que você inseriu para mais tarde. Você deverá ver um alerta que confirme que seu usuário foi criado.
 
-1. Complete the registration form and choose **Let's Ryde**. You can use your own email or enter a fake email. Make sure to choose a password that contains at least one upper-case letter, a number, and a special character. Don't forget the password you entered for later. You should see an alert that confirms that your user has been created.
 
-1. Confirm your new user using one of the two following methods.
+1. Se utilizou um endereço de e-mail que controla, pode concluir o processo de verificação da conta visitando `/verify.html` no domínio do seu website e introduzindo o código de verificação que lhe é enviado por e-mail. Observe que o e-mail de verificação pode acabar na sua pasta de spam.
 
-  1. If you used an email address you control, you can complete the account verification process by visiting `/verify.html` under your website domain and entering the verification code that is emailed to you. Please note, the verification email may end up in your spam folder. For real deployments we recommend [configuring your user pool to use Amazon Simple Email Service](http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-message-customizations.html#cognito-user-pool-settings-ses-authorization-to-send-email) to send emails from a domain you own.
+1. Depois de confirmar o novo usuário usando a página `/verify.html` ou o console do Cognito, visite `/signin.html` e faça login usando o endereço de e-mail e a senha que você inseriu durante a etapa de registro.
 
-1. If you used a dummy email address, you must confirm the user manually through the Cognito console.
-
-    1. From the AWS console, click Services then select **Cognito** under Security, Identity & Compliance.
-    1. Choose **Manage your User Pools**
-    1. Select the `WildRydes` user pool and click **Users and groups** in the left navigation bar.
-    1. You should see a user corresponding to the email address that you submitted through the registration page. Choose that username to view the user detail page.
-    1. Choose **Confirm user** to finalize the account creation process.
-
-1. After confirming the new user using either the `/verify.html` page or the Cognito console, visit `/signin.html` and log in using the email address and password you entered during the registration step.
-
-1. If successful you should be redirected to `/ride.html`. You should see a notification that the API is not configured.
+1. Se for bem sucedido, você deve ser redirecionado para `/ride.html`. Você deve ver uma notificação informando que a API não está configurada.
 
     ![Successful login screenshot](../images/successful-login.png)
 
-### :star: Recap
+### :star: Revisão
 
-:key: Amazon Cognito provides two different capabilities for managing users, federated identities and user pools. [Amazon Cognito][cognito] user pools can handle almost every aspect about managing users, their login credentials, handling password resets, multifactor authentication and much more!
+:key: O Amazon Cognito fornece dois recursos diferentes para gerenciar usuários, identidades federadas e grupos de usuários. Os grupos de usuários do [Amazon Cognito] podem lidar com quase todos os aspectos sobre o gerenciamento de usuários, suas credenciais de login, manipulação de redefinições de senha, autenticação multifator e muito mais!
 
-:wrench: In this module you've used user pools to create a completely hosted and managed user management system that will allow us to authenticate your users and manage their user information. From there you've updated the website to use the user pool and utlized the AWS SDKs to provide a signin form on the site.
+:wrench: Neste módulo você usou grupos de usuários para criar um sistema de gerenciamento de usuários completamente hospedado e gerenciado que nos permitirá autenticar seus usuários e gerenciar suas informações de usuário. A partir daí, você atualizou o site para usar o grupo de usuários e utilizou os AWS SDKs para fornecer um formulário de login no site.
 
-### Next
+### Próximo
 
-:white_check_mark: After you have successfully logged into your web application, you can proceed to the next module, [Serverless Backend][serverless-backend].
-
-### Extra
-
-* Try copying the **auth_token** you've received and paste that into an [online JWT Decoder][jwt-decoder] to understand what this token means for your application
+:white_check_mark: Depois de ter logado com sucesso na sua aplicação web, você pode prosseguir para o próximo módulo, [Serverless Backend][serverless-backend].
 
 [static-web-hosting]: ../1_StaticWebHosting/
 [amplify-console]: https://aws.amazon.com/amplify/console/
