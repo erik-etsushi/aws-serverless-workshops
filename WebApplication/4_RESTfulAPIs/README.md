@@ -140,11 +140,11 @@ Atualize o arquivo /js/config.js na implantação do site para incluir o URL de 
 
 ### :star: Revisão
 
-:key: [Amazon API Gateway] [api-gw] é um serviço totalmente gerenciado que facilita aos desenvolvedores criar, publicar, manter, monitorar e proteger APIs em qualquer escala. Você pode conectar facilmente a Autorização via [Amazon Cognito] [cognito] e back-ends como [AWS Lambda] [lambda] para criar APIs completamente sem servidor.
+:key: [Amazon API Gateway][api-gw] é um serviço totalmente gerenciado que facilita aos desenvolvedores criar, publicar, manter, monitorar e proteger APIs em qualquer escala. Você pode conectar facilmente a Autorização via [Amazon Cognito][cognito] e back-ends como [AWS Lambda][lambda] para criar APIs completamente sem servidor.
 
 :wrench: Neste módulo você usou o API Gateway para fornecer uma API REST para a função do Lambda criada no módulo anterior. A partir daí, você atualizou o site para usar o endpoint da API para que você possa solicitar passeios e as informações sobre o passeio sejam salvas na tabela do DynamoDB criada anteriormente.
 
-:estrela: Parabéns, você completou o Workshop de Aplicações Web Wild Rydes Serverless!  
+:star: Parabéns, você completou o Workshop de Aplicações Web Wild Rydes Serverless!  
 
 
 [amplify-console]: https://aws.amazon.com/amplify/console/
