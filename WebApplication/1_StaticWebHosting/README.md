@@ -1,4 +1,4 @@
-# Module 1: Static Web Hosting com AWS Amplify Console
+# Módulo 1: Website estático com AWS Amplify
 
 Neste módulo, você configurará o AWS Amplify Console para hospedar os recursos estáticos para seu aplicativo web. Nos módulos subsequentes, você adicionará funcionalidade dinâmica a essas páginas usando JavaScript para chamar APIs RESTful remotas criadas com o AWS Lambda e o Amazon API Gateway.
 
@@ -30,7 +30,7 @@ git config --global credential.UseHttpPath true
 ```
 
 Em seguida, você precisa criar o repositório e cloná-lo para o seu ambiente Cloud9:
-1. Abra o [AWS CodeCommit console][codecommit-console]
+1. Abra o [AWS CodeCommit]
 1. Selecione **Create Repository**
 1. Nomeie o *Repository name** como "wildrydes-site"
 1. Selecione **Create**
