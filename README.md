@@ -1,7 +1,7 @@
 # Wild Rydes Serverless Workshops - Customized
 
-This repository contains a collection of workshops and other hands on content that will guide you through building various serverless applications using AWS Lambda, Amazon API Gateway, Amazon DynamoDB, AWS Step Functions, Amazon Kinesis, and other services.
+Este repositório contém uma coleção de workshops e outros conteúdos práticos que o orientarão na criação de vários aplicativos serverless usando o AWS Lambda, o Amazon API Gateway, o Amazon DynamoDB, o AWS Step Functions, o Amazon Kinesis e outros serviços.
 
-# Workshops
+# Workshop
 
-- [**Web Application**](WebApplication) - This workshop shows you how to build a dynamic, serverless web application. You'll learn how to host static web resources with Amazon S3, how to use Amazon Cognito to manage users and authentication, and how to build a RESTful API for backend processing using Amazon API Gateway, AWS Lambda and Amazon DynamoDB.
+- [**Web Application**](WebApplication) - Este workshop mostra como criar uma aplicação web dinâmica e serverless. Você aprenderá como hospedar recursos estáticos da Web com o Amazon S3, como usar o Amazon Cognito para gerenciar usuários e autenticação e como criar uma API RESTful para processamento de back-end usando o Amazon API Gateway, o AWS Lambda e o Amazon DynamoDB.
